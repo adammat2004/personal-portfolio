@@ -5,9 +5,14 @@ import Image from "next/image";
 
 const EmailSection = () => {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
     const data = {
       email: e.target.email.value,
       subject: e.target.subject.value,
@@ -16,24 +21,31 @@ const EmailSection = () => {
     const JSONdata = JSON.stringify(data);
     const endpoint = "/api/send";
 
-    // Form the request for sending data to the server.
-    const options = {
-      // The method is POST because we are sending data.
-      method: "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    };
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSONdata,
+      };
 
-    const response = await fetch(endpoint, options);
-    const resData = await response.json();
+      const response = await fetch(endpoint, options);
+      const resData = await response.json();
 
-    if (response.status === 200) {
-      console.log("Message sent.");
-      setEmailSubmitted(true);
+      if (response.status === 200) {
+        console.log("Message sent.");
+        setEmailSubmitted(true);
+        e.target.reset();
+      } else {
+        setError(resData.error || "Failed to send email. Please try again.");
+        console.error("Error:", resData.error);
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection and try again.");
+      console.error("Network error:", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -57,16 +69,18 @@ const EmailSection = () => {
           <a href="https://github.com/adammat2004" target="_blank" rel="noreferrer noopener">
             <Image src='/GitHub.png' alt="Github Icon" width={120} height={120} />
           </a>
-          <a href="https://linkedin.com/in/adam-matthews-73b2592b5" target="_blank" rel="noreferrer noopener">
+          <a href="https://www.linkedin.com/in/adammat04/" target="_blank" rel="noreferrer noopener">
                 <Image src='/linkedIn.png' alt="Linkedin Icon" width={70} height={70}/>
           </a>
         </div>
       </div>
       <div>
         {emailSubmitted ? (
-          <p className="text-green-500 text-sm mt-2">
-            Email sent successfully!
-          </p>
+          <div className="bg-green-500/10 border border-green-500 rounded-lg p-4">
+            <p className="text-green-500 text-sm font-medium">
+              Email sent successfully! I'll get back to you soon.
+            </p>
+          </div>
         ) : (
           <form className="flex flex-col" onSubmit={handleSubmit}>
             <div className="mb-6">
@@ -115,11 +129,17 @@ const EmailSection = () => {
                 placeholder="Let's talk about..."
               />
             </div>
+            {error && (
+              <div className="mb-4 bg-red-500/10 border border-red-500 rounded-lg p-3">
+                <p className="text-red-500 text-sm">{error}</p>
+              </div>
+            )}
             <button
               type="submit"
-              className="bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 px-5 rounded-lg w-full"
+              disabled={isSubmitting}
+              className="bg-primary-500 hover:bg-primary-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2.5 px-5 rounded-lg w-full transition-colors"
             >
-              Send Message
+              {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
         )}

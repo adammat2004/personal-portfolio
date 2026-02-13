@@ -1,33 +1,62 @@
 "use client";
 import React, { useTransition, useState } from "react";
-import Image from "next/image";
 import TabButton from "./TabButton";
+
+const SKILL_CATEGORIES = [
+  {
+    title: "Languages",
+    skills: ["JavaScript", "Python", "C", "C++", "TypeScript", "Rust", "Java", "SQL", "Haskell"],
+  },
+  {
+    title: "Frameworks",
+    skills: ["React", "Next.js", "Node.js", "Express", "NestJS",  "Prisma", "Jest", "React Native", "Expo"],
+  },
+  {
+    title: "DevOps",
+    skills: ["Git", "Docker", "Stripe", "Shell Scripting"],
+  },
+  {
+    title: "Machine Learning",
+    skills: ["Scikit-learn", "OpenAi Embeddings"],
+  },
+  {
+    title: "Data Science",
+    skills: ["Pandas", "Numpy", "Matplotlib"],
+  },
+  {
+    title: "Databases",
+    skills: ["PostgreSQL", "MySQL", "MongoDB"],
+  }
+];
 
 const TAB_DATA = [
   {
     title: "Skills",
     id: "skills",
     content: (
-        <div className="flex flex-row gap-8">
-            <ul className="list-disc pl-2">
-                <li>Node.js</li>
-                <li>Express</li>
-                <li>MongoDB</li>
-                <li>Prisma</li>
-                <li>JavaScript</li>
-                <li>React</li>
-                <li>Next.js</li>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+        {SKILL_CATEGORIES.map((category, index) => (
+          <div
+            key={index}
+            className="bg-[#181818] border border-[#33353F] rounded-lg p-6 hover:border-primary-500 transition-colors duration-300"
+          >
+            <h3 className="text-xl font-semibold text-white mb-4 border-b border-[#33353F] pb-2">
+              {category.title}
+            </h3>
+            <ul className="space-y-2">
+              {category.skills.map((skill, skillIndex) => (
+                <li
+                  key={skillIndex}
+                  className="text-[#ADB7BE] hover:text-white transition-colors duration-200 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+                  {skill}
+                </li>
+              ))}
             </ul>
-            <ul className="list-disc pl-2">
-                <li>Python</li>
-                <li>Numpy</li>
-                <li>Pandas</li>
-                <li>Git</li>
-                <li>C</li>
-                <li>SQL</li>
-                <li>Stripe</li>
-            </ul>
-        </div>
+          </div>
+        ))}
+      </div>
     ),
   },
   {
@@ -65,18 +94,17 @@ const AboutSection = () => {
 
   return (
     <section className="text-white" id="about">
-      <div className="md:grid md:grid-cols-2 gap-8 items-center py-8 px-4 xl:gap-16 sm:py-16 xl:px-16">
-        <Image src="/about_section.jpeg" alt='about image' width={500} height={800} />
-        <div className="mt-4 md:mt-0 text-left flex flex-col h-full">
+      <div className="container mx-auto px-4 py-8 sm:py-16 xl:px-16">
+        <div className="max-w-6xl mx-auto text-left flex flex-col">
           <h2 className="text-4xl font-bold text-white mb-4">About Me</h2>
-          <p className="text-base lg:text-lg">
-            I am a full stack web developer with a passion for creating
-            interactive and responsive web applications. I have experience
-            working with JavaScript, React, Node.js, Express, MongoDB,
-            Prisma, HTML, CSS, and Git. I am a quick learner and I am always
-            looking to expand my knowledge and skill set.
+          <p className="text-base lg:text-lg mb-8">
+            I’m a third-year Computer Science student at Dublin City University 
+            and a product-focused software engineer with a strong interest in building real-world systems.
+            I design and build full-stack applications end-to-end — from mobile frontends in React Native
+            to scalable backend APIs using NestJS, Prisma and MongoDB.
+            I’m particularly interested in building platforms that solve real operational problems, especially in marketplaces and SaaS products.
           </p>
-          <div className="flex flex-row justify-start mt-8">
+          <div className="flex flex-row justify-start mb-8">
             <TabButton
               selectTab={() => handleTabChange("skills")}
               active={tab === "skills"}
@@ -99,7 +127,7 @@ const AboutSection = () => {
               Certifications{" "}
             </TabButton>*/}
           </div>
-          <div className="mt-8">
+          <div>
             {TAB_DATA.find((t) => t.id === tab).content}
           </div>
         </div>
