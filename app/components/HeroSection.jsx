@@ -33,7 +33,7 @@ const HeroSection = () => {
             />
           </h1>
           <p className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">
-            My name is Adam Matthews. I'm a 3rd year computer science student in DCU and incoming software engineer intern at Workday..
+            My name is Adam Matthews. I'm a 3rd year computer science student in DCU and incoming software engineer intern at Workday.
           </p>
           <div>
             <Link
