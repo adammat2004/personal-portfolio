@@ -1,148 +1,165 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+
+import { useState } from "react";
+
+const GithubIcon = () => (
+  <svg
+    aria-hidden="true"
+    width="19"
+    height="19"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.04 1.77 2.72 1.26 3.38.96.1-.75.4-1.26.74-1.55-2.57-.29-5.28-1.29-5.28-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18a10.98 10.98 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.4-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
+  </svg>
+);
+
+const LinkedinIcon = () => (
+  <svg
+    aria-hidden="true"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.86-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.33V8.98h3.42v1.57h.05c.47-.9 1.64-1.86 3.37-1.86 3.6 0 4.27 2.37 4.27 5.46v6.3ZM5.31 7.41a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13Zm1.78 13.04H3.53V8.98h3.56v11.47ZM22.23 0H1.76C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.76 24h20.47c.97 0 1.77-.77 1.77-1.73V1.73C24 .77 23.2 0 22.23 0Z" />
+  </svg>
+);
 
 const EmailSection = () => {
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
-    setIsSubmitting(true);
+    setStatus("submitting");
 
-    const data = {
-      email: e.target.email.value,
-      subject: e.target.subject.value,
-      message: e.target.message.value,
-    };
-    const JSONdata = JSON.stringify(data);
-    const endpoint = "/api/send";
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
     try {
-      const options = {
+      const response = await fetch("/api/send", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSONdata,
-      };
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          subject: formData.get("subject"),
+          message: formData.get("message"),
+        }),
+      });
 
-      const response = await fetch(endpoint, options);
-      const resData = await response.json();
+      const result = await response.json();
 
-      if (response.status === 200) {
-        console.log("Message sent.");
-        setEmailSubmitted(true);
-        e.target.reset();
-      } else {
-        setError(resData.error || "Failed to send email. Please try again.");
-        console.error("Error:", resData.error);
+      if (!response.ok) {
+        throw new Error(result.error || "Your message could not be sent.");
       }
-    } catch (err) {
-      setError("Network error. Please check your connection and try again.");
-      console.error("Network error:", err);
-    } finally {
-      setIsSubmitting(false);
+
+      form.reset();
+      setStatus("success");
+    } catch (submissionError) {
+      setError(
+        submissionError.message ||
+          "Something went wrong. Please email me directly instead.",
+      );
+      setStatus("error");
     }
   };
 
   return (
-    <section
-      id="contact"
-      className="grid md:grid-cols-2 my-12 md:my-12 py-24 gap-4 relative"
-    >
-      <div className="bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-900 to-transparent rounded-full h-80 w-80 z-0 blur-lg absolute top-3/4 -left-4 transform -translate-x-1/2 -translate-1/2"></div>
-      <div className="z-10">
-        <h5 className="text-xl font-bold text-white my-2">
-          Let&apos;s Connect
-        </h5>
-        <p className="text-[#ADB7BE] mb-4 max-w-md">
-          {" "}
-          I&apos;m currently looking for new opportunities, my inbox is always
-          open. Whether you have a question or just want to say hi, I&apos;ll
-          try my best to get back to you!
-        </p>
-        <div className="socials flex flex-row gap-2">
-          <a href="https://github.com/adammat2004" target="_blank" rel="noreferrer noopener">
-            <Image src='/GitHub.png' alt="Github Icon" width={120} height={120} />
-          </a>
-          <a href="https://www.linkedin.com/in/adammat04/" target="_blank" rel="noreferrer noopener">
-                <Image src='/linkedIn.png' alt="Linkedin Icon" width={70} height={70}/>
-          </a>
-        </div>
-      </div>
-      <div>
-        {emailSubmitted ? (
-          <div className="bg-green-500/10 border border-green-500 rounded-lg p-4">
-            <p className="text-green-500 text-sm font-medium">
-              Email sent successfully! I'll get back to you soon.
+    <section id="contact" className="section contact-section">
+      <div className="site-shell contact-panel">
+        <div className="contact-grid">
+          <div className="contact-copy-wrap">
+            <p className="section-kicker contact-kicker">04 / Contact</p>
+            <h2 className="contact-title">Let&apos;s build something useful.</h2>
+            <p className="contact-copy">
+              I&apos;m open to graduate software engineering, full-stack,
+              backend and AI-focused roles beginning in 2027. If you&apos;re
+              building a thoughtful product with an ambitious team, I&apos;d
+              love to hear about it.
             </p>
-          </div>
-        ) : (
-          <form className="flex flex-col" onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="text-white block mb-2 text-sm font-medium"
+            <a className="contact-email" href="mailto:ammatthews2004@gmail.com">
+              ammatthews2004@gmail.com <span className="arrow">↗</span>
+            </a>
+
+            <div className="social-links">
+              <a
+                className="icon-link"
+                href="https://github.com/adammat2004"
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Adam Matthews on GitHub"
               >
-                Your email
-              </label>
+                <GithubIcon />
+              </a>
+              <a
+                className="icon-link"
+                href="https://www.linkedin.com/in/adammat04/"
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Adam Matthews on LinkedIn"
+              >
+                <LinkedinIcon />
+              </a>
+            </div>
+          </div>
+
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <div className="field">
+              <label htmlFor="email">Your email</label>
               <input
+                id="email"
                 name="email"
                 type="email"
-                id="email"
+                autoComplete="email"
+                placeholder="you@company.com"
                 required
-                className="bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5"
-                placeholder="jacob@google.com"
               />
             </div>
-            <div className="mb-6">
-              <label
-                htmlFor="subject"
-                className="text-white block text-sm mb-2 font-medium"
-              >
-                Subject
-              </label>
+            <div className="field">
+              <label htmlFor="subject">Subject</label>
               <input
+                id="subject"
                 name="subject"
                 type="text"
-                id="subject"
+                placeholder="Graduate opportunity"
+                maxLength={150}
                 required
-                className="bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5"
-                placeholder="Just saying hi"
               />
             </div>
-            <div className="mb-6">
-              <label
-                htmlFor="message"
-                className="text-white block text-sm mb-2 font-medium"
-              >
-                Message
-              </label>
+            <div className="field">
+              <label htmlFor="message">Message</label>
               <textarea
-                name="message"
                 id="message"
-                className="bg-[#18191E] border border-[#33353F] placeholder-[#9CA2A9] text-gray-100 text-sm rounded-lg block w-full p-2.5"
-                placeholder="Let's talk about..."
+                name="message"
+                placeholder="Tell me a little about the role or project…"
+                maxLength={3000}
+                required
               />
             </div>
-            {error && (
-              <div className="mb-4 bg-red-500/10 border border-red-500 rounded-lg p-3">
-                <p className="text-red-500 text-sm">{error}</p>
-              </div>
+
+            {status === "error" && (
+              <p className="form-status form-error" role="alert">
+                {error}
+              </p>
             )}
+            {status === "success" && (
+              <p className="form-status form-success" role="status">
+                Thanks—your message has been sent. I&apos;ll be in touch soon.
+              </p>
+            )}
+
             <button
+              className="button button-dark"
               type="submit"
-              disabled={isSubmitting}
-              className="bg-primary-500 hover:bg-primary-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2.5 px-5 rounded-lg w-full transition-colors"
+              disabled={status === "submitting"}
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {status === "submitting" ? "Sending…" : "Send message"}
+              {status !== "submitting" && <span className="arrow">↗</span>}
             </button>
           </form>
-        )}
+        </div>
       </div>
     </section>
   );

@@ -1,73 +1,69 @@
-"use client";
-import React from "react";
-import Image from "next/image";
-import { TypeAnimation } from "react-type-animation";
-import { motion } from "framer-motion";
 import Link from "next/link";
 
 const HeroSection = () => {
   return (
-    <section className="lg:py-16 pt-6">
-      <div className="grid grid-cols-1 sm:grid-cols-12">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="col-span-8 place-self-center text-center sm:text-left justify-self-start"
-        >
-          <h1 className="text-white mb-4 text-4xl sm:text-5xl lg:text-8xl lg:leading-normal font-extrabold">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-secondary-600">
-              Hello, I&apos;m{" "}
-            </span>
-            <br></br>
-            <TypeAnimation
-              sequence={[
-                "Adam Matthews",
-                1000,
-                "Full Stack Developer",
-                1000,
-              ]}
-              wrapper="span"
-              speed={40}
-              repeat={2}
-            />
-          </h1>
-          <p className="text-[#ADB7BE] text-base sm:text-lg mb-6 lg:text-xl">
-            My name is Adam Matthews. I'm a 3rd year computer science student in DCU and incoming software engineer intern at Workday.
-          </p>
-          <div>
-            <Link
-              href="/#contact"
-              className="px-6 inline-block py-3 w-full sm:w-fit rounded-full mr-4 bg-gradient-to-br from-primary-500 to-secondary-500 hover:bg-slate-800 text-white"
-            >
-              Contact Me
-            </Link>
-            {/*<Link
-              href="/"
-              className="px-1 inline-block py-1 w-full sm:w-fit rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 hover:bg-slate-800 text-white mt-3"
-            >
-              <span className="block bg-[#121212] hover:bg-slate-800 rounded-full px-5 py-2">
-                Download CV
-              </span>
-            </Link>*/}
+    <section className="hero">
+      <div className="site-shell">
+        <div className="hero-grid">
+          <div className="hero-main">
+            <p className="hero-eyebrow">Adam Matthews · Software Engineer</p>
+            <h1 className="hero-title">
+              Full-stack, backend and AI product development.
+            </h1>
+            <p className="hero-intro">
+              I&apos;m a Computer Science student at Dublin City University and
+              a Software Development Engineer Intern at Workday. I build
+              complete software products, from APIs and data models to AI
+              features and user-facing applications.
+            </p>
+            <div className="hero-actions">
+              <Link className="button button-dark" href="#work">
+                View selected work <span className="arrow">↗</span>
+              </Link>
+              <Link className="button button-light" href="#contact">
+                Contact me
+              </Link>
+            </div>
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="col-span-4 place-self-center mt-4 lg:mt-0"
-        >
-          <div className="rounded-full bg-[url(/me.jpg)] w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-cover bg-center relative">
-            {/*<Image
-              src="/me.jpg"
-              alt="hero image"
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-              width={300}
-              height={300}
-            />*/}
-          </div>
-        </motion.div>
+
+          <aside className="hero-summary" aria-label="Current profile">
+            <p className="hero-summary-label">Current profile</p>
+            <dl className="profile-list">
+              <div>
+                <dt>Experience</dt>
+                <dd>
+                  Software Development Engineer Intern
+                  <span>Workday · Time Management</span>
+                </dd>
+              </div>
+              <div>
+                <dt>Independent work</dt>
+                <dd>
+                  Founder and full-stack developer
+                  <span>Tradeez · AI-assisted contractor software</span>
+                </dd>
+              </div>
+              <div>
+                <dt>Education</dt>
+                <dd>
+                  BSc Computer Science
+                  <span>Dublin City University · Graduating 2027</span>
+                </dd>
+              </div>
+            </dl>
+            <div className="hero-availability">
+              <span className="availability-dot" aria-hidden="true" />
+              Open to 2027 graduate roles
+            </div>
+          </aside>
+        </div>
+
+        <div className="hero-footer">
+          <span>Dublin, Ireland</span>
+          <span>Full-stack engineering</span>
+          <span>Backend systems</span>
+          <span>Applied AI</span>
+        </div>
       </div>
     </section>
   );
