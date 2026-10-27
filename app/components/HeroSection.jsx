@@ -39,7 +39,7 @@ const HeroSection = () => {
               <div>
                 <dt>Independent work</dt>
                 <dd>
-                  Founder and full-stack developer
+                  Full-stack developer
                   <span>Tradeez · AI-assisted contractor software</span>
                 </dd>
               </div>
